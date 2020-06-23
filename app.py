@@ -1,28 +1,30 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
 from script import sourceComments
 from flask import send_from_directory
 
-uploadFolder = "/home/mushtaq/Projects/uploadedFiles"
+uploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
 allowedExtensions = {'cs'}
 maxFileSize = '10,400,000'  # 10 mb in bytes
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = uploadFolder
+app.config['MAX_CONTENT_PATH'] = maxFileSize
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in allowedExtensions
 
+def allowed_file(fname):
+    return '.' in fname and \
+        fname.rsplit('.', 1)[1].lower() in allowedExtensions
+filename = ''
 
 @app.route('/')
 def landing_page():
-   return render_template('index.html')
+   return render_template('index.html',filenamee = filename)
 
 
-app.config['UPLOAD_FOLDER'] = uploadFolder
-app.config['MAX_CONTENT_PATH'] = maxFileSize
-filename = ''
+
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
@@ -44,21 +46,24 @@ def upload_file():
             file_relativepath = os.path.join(
                 app.config['UPLOAD_FOLDER'], filename)
             sourceComments(file_relativepath, '//')  # return true
-            #return redirect(url_for('return_file', filename=filename))
-
+            #return redirect(url_for('return_file', filename=filename)) #downloads the file
+            
         else:
             return "invalid file type"
-    return redirect(url_for('landing_page'))
+    return render_template('index.html',filenamee = filename)
+    
+    
 
 @app.route('/uploader/success/<path:filename>')
 def return_file(filename):
     # return "success fully updated"
-    # return render_template("download.html")
     try:
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename=filename,  as_attachment=True)
+        return redirect(url_for(landing_page))
     except FileNotFoundError:
         abort(404)
 
+    
 
 if __name__ == '__main__':
    app.run(debug = True)

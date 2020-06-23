@@ -13,27 +13,51 @@
             <h1>Welcome to my application</h1>
             <h2>Convert Source code comments from Japanese to English</h2>
 
+            {% if filenamee == '' %}
             <div class="col-4 mx-auto">
-                <form action="http://localhost:5000/uploader" method="POST" id="form1"
-                enctype="multipart/form-data">
-                    <input type="file" id="mush" name="file"/>
-                <button type="submit" id="btnUpload" class="btn btn-primary" form="form1">Upload C# file</button>
-                <a href="/uploader/success" target="blank" ><button type="button" id="btnDownload" class="btn btn-success" disabled>Download file</button></a>
+                <form action="http://localhost:5000/uploader" method="POST" id="form1" enctype="multipart/form-data">
+                    <label>Select your file <input type="file" id="userFile" name="file"/></label>
+                    
+                    <button type="submit" id="btnUpload" class="btn btn-primary" form="form1">Upload C# file</button>
+                    <a href="/uploader/success" target="blank" ><button type="button" id="btnDownload" class="btn btn-success" disabled>Download file</button></a>
                 </form>
             </div>
+            
+            {% else %}
+            <div class="col-4 mx-auto">
+                <form action="http://localhost:5000/uploader" method="POST" id="form1" enctype="multipart/form-data">
+                    <label>Select your file <input type="file" id="userFile" name="file"/></label>
+                    
+                    <button type="submit" id="btnUpload" class="btn btn-primary" form="form1">Upload C# file</button>
+                    <a href="/uploader/success/{{ filenamee }}" target="blank" ><button type="button" id="btnDownload" class="btn btn-success">Download file {{ filenamee }}</button></a>
+                </form>
+            </div>
+            {% endif %}
         </div>
     </div>
 
-    <script>
-        if(document.getElementById('mush').files.length > 0)
-        {
-            document.getElementById('btnDownload').disabled = false;
-        }
-    </script>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        // if(document.getElementById('userFile').files.length > 0)
+        // {
+        //     document.getElementById('btnDownload').disabled = false;
+        // }
+        // else
+        // {
+        //     console.log("no files selected");
+        // }
+        // if($("#userfile").val() != ''){
+        
+        //     $('.btnDownload').prop('disabled',false);
+        // }else{
+        //     console.log('no files seleected');
+        // }
+    
+    </script>
 </body>
 </html>
