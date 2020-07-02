@@ -5,7 +5,8 @@ import os
 from script import sourceComments
 from flask import send_from_directory
 
-uploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
+uploadFolder = "/home/mushtaq/Projects/uploadedFiles"
+#uploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
 allowedExtensions = {'cs'}
 maxFileSize = '10,400,000'  # 10 mb in bytes
 app = Flask(__name__)
