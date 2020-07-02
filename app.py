@@ -6,7 +6,7 @@ from script import sourceComments
 from flask import send_from_directory
 
 uploadFolder = "/home/mushtaq/Projects/uploadedFiles"
-#uploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
+#suploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
 allowedExtensions = {'cs'}
 maxFileSize = '10,400,000'  # 10 mb in bytes
 app = Flask(__name__)
@@ -53,7 +53,8 @@ def upload_file():
             return "invalid file type"
     return render_template('index.html',filenamee = filename)
     
-    
+
+
 
 @app.route('/uploader/success/<path:filename>')
 def return_file(filename):
@@ -63,6 +64,8 @@ def return_file(filename):
         return redirect(url_for(landing_page))
     except FileNotFoundError:
         abort(404)
+    else:
+        os.remove(filename)
 
     
 
