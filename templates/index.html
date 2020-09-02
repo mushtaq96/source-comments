@@ -10,8 +10,8 @@
 <body>
     <div class="jumbotron d-flex justify-content-center align-items-center">
         <div class="container">
-            <h1>Welcome to my application</h1>
-            <h2>Convert Source code comments from Japanese to English</h2>
+            <h1>Welcome! Frustrated with the Japanese comments your Senpai had written?</h1>
+            <p>Fret not and Convert Source code comments from Japanese to English with just a click.</p>
 
             {% if filenamee == '' %}
             <div class="col-4 mx-auto">
@@ -29,6 +29,8 @@
                     <label>Select your file <input type="file" id="userFile" name="file"/></label>
                     
                     <button type="submit" id="btnUpload" class="btn btn-primary" form="form1">Upload C# file</button>
+                    <br>
+                    <br>
                     <a href="/uploader/success/{{ filenamee }}" target="blank" ><button type="button" id="btnDownload" class="btn btn-success">Download file {{ filenamee }}</button></a>
                 </form>
             </div>

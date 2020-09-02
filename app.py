@@ -1,18 +1,17 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
 from script import sourceComments
 from flask import send_from_directory
 
-uploadFolder = "/home/mushtaq/Projects/uploadedFiles"
-#suploadFolder = "c:\\Users\\b.mushtaq\\source-comments\\uploadedFiles"
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+uploadFolder = os.path.join(FILE_DIR,'uploadedFiles')
+
 allowedExtensions = {'cs'}
 maxFileSize = '10,400,000'  # 10 mb in bytes
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = uploadFolder
 app.config['MAX_CONTENT_PATH'] = maxFileSize
-
 
 
 def allowed_file(fname):
@@ -25,8 +24,6 @@ def landing_page():
    return render_template('index.html',filenamee = filename)
 
 
-
-
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     # function to let user submit the .cs file
@@ -36,13 +33,12 @@ def upload_file():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
+        # if user does not select file, browser also submit an empty part without filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            filename = secure_filename(file.filename)    
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_relativepath = os.path.join(
                 app.config['UPLOAD_FOLDER'], filename)
