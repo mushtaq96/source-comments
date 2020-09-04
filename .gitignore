@@ -3,3 +3,6 @@ env
 
 #ignore the cached file
 __pycache__
+
+#ignore the vcode extentions
+.vscode
