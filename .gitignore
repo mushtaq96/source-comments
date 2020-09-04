@@ -1,0 +1,5 @@
+#ignore the virtual environment
+env
+
+#ignore the cached file
+__pycache__
