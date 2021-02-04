@@ -37,6 +37,17 @@
             {% endif %}
         </div>
     </div>
+    <div class="container">
+        <form action="{{url_for('posted_input')}}" method="POST" id="form2" enctype="multipart/form-data">
+            <label>Paste your Japanese paragraph 
+                <input type="text" id="txtInput" name="japaneseText"/>
+            </label>
+            <a href="/jlpt" target="blank" >
+            <button type="submit" id="btnSubmit" class="btn btn-primary" form="form2">
+                Get JLPT N3 kanji
+            </button>  </a>
+        </form>
+    </div>
 
     
     <!-- Optional JavaScript -->

@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, json,jsonify
 from werkzeug.utils import secure_filename
 import os
 from script import sourceComments
 from flask import send_from_directory
+import re
 
 FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 uploadFolder = os.path.join(FILE_DIR,'uploadedFiles')
@@ -63,7 +64,64 @@ def return_file(filename):
     else:
         os.remove(filename)
 
+@app.route('/jlpt',methods=['POST'])
+def posted_input():
+    if request.method == 'POST':
+        gvariable={}
+        japanese_text = request.form['japaneseText']
+        japanese_text = japanese_text.strip()#strip whiespace including new line
+        japanese_text = japanese_text.replace(" ","")#remove whitespaces in between
+        japanese_text_kanji = filter_kanji_function(japanese_text)
+        split_list = split(japanese_text_kanji)
+        json_url = os.path.join(FILE_DIR,"static","kanji.json")
+        data = json.load(open(json_url, encoding="utf-8_sig"))
+        for each_character in split_list:
+            value = kanji_details_function(data, each_character)
+            isN3 = N3check_function(value)
+            if(isN3):
+                gvariable[each_character]=value #add the particular cases for N3
+    return render_template('jlpt.html',N3ResultDic = gvariable)#send the final paragraph with jlpt n3 kanji result
+
+def filter_kanji_function(text):
+    hiragana_full = r'[ぁ-ゟ]'
+    katakana_full = r'[゠-ヿ]'
+    kanji = r'[㐀-䶵一-鿋豈-頻]'
+    radicals = r'[⺀-⿕]'
+    katakana_half_width = r'[｟-ﾟ]'
+    alphanum_full = r'[！-～]'
+    symbols_punct = r'[、-〿]'
+    misc_symbols = r'[ㇰ-ㇿ㈠-㉃㊀-㋾㌀-㍿]'
+    ascii_char = r'[ -~]'
+    modfied_text = remove_unicode_block(hiragana_full, text)
+    modfied_text = remove_unicode_block(alphanum_full,modfied_text)
+    modfied_text = remove_unicode_block(katakana_full, modfied_text)
+    modfied_text = remove_unicode_block(katakana_half_width,modfied_text)
+    modfied_text = remove_unicode_block(symbols_punct,modfied_text)
+    modfied_text = remove_unicode_block(ascii_char,modfied_text)
+    modfied_text = remove_unicode_block(misc_symbols,modfied_text)
+    ###need some attention
+    return modfied_text
+
+def remove_unicode_block(unicode_block, string):
+    ''' removes all chaacters from a unicode block and returns all remaining texts from string argument.
+    Note that you must use the unicode blocks defined above, or patterns of similar form '''
+    return re.sub( unicode_block, '', string)
     
+def split(ip_string):#split the string into individual characters
+    return [char for char in ip_string]
+
+def kanji_details_function(json_obj, key):#get the details for individual kanji
+    if key in json_obj.keys():
+        return json_obj[key]
+
+def N3check_function(dictionary):#check for N3 Kanji 
+    my_key = 'jlpt_new'
+    if my_key in dictionary.keys():
+        if dictionary[my_key]==3:
+            return True
+        else:
+            return False
+
 
 if __name__ == '__main__':
    app.run(debug = True,host=os.getenv('IP', '0.0.0.0'), 
